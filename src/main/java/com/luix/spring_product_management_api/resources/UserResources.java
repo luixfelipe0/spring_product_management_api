@@ -1,24 +1,33 @@
 package com.luix.spring_product_management_api.resources;
 
 import com.luix.spring_product_management_api.entities.User;
+import com.luix.spring_product_management_api.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserResources {
 
-    @GetMapping
-    public ResponseEntity<User> findById() {
-        User u = new User(1L,
-                "Luix Felipe",
-                "luix.felipe@email.com",
-                "21123456789",
-                "password123");
+    @Autowired
+    private UserService userService;
 
-        return ResponseEntity.ok().body(u);
+    @GetMapping
+    public ResponseEntity<List<User>> findAll() {
+        List<User> list = userService.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id) {
+        User user = userService.findById(id);
+        return ResponseEntity.ok().body(user);
     }
 
 }
