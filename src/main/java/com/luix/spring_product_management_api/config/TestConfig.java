@@ -2,16 +2,19 @@ package com.luix.spring_product_management_api.config;
 
 import com.luix.spring_product_management_api.entities.Category;
 import com.luix.spring_product_management_api.entities.Order;
+import com.luix.spring_product_management_api.entities.Product;
 import com.luix.spring_product_management_api.entities.User;
 import com.luix.spring_product_management_api.entities.enums.OrderStatus;
 import com.luix.spring_product_management_api.repositories.CategoryRepository;
 import com.luix.spring_product_management_api.repositories.OrderRepository;
+import com.luix.spring_product_management_api.repositories.ProductRepository;
 import com.luix.spring_product_management_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 
@@ -28,8 +31,19 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
+        Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", BigDecimal.valueOf(90.5), "");
+        Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", BigDecimal.valueOf(2190.0), "");
+        Product p3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", BigDecimal.valueOf(1250.0), "");
+        Product p4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", BigDecimal.valueOf(1200.0), "");
+        Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", BigDecimal.valueOf(100.99), "");
+
+        productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
 
         Category cat1 = new Category(null, "Smartphones");
         Category cat2 = new Category(null, "Tablets");
