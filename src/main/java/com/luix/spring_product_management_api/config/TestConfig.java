@@ -1,8 +1,10 @@
 package com.luix.spring_product_management_api.config;
 
+import com.luix.spring_product_management_api.entities.Category;
 import com.luix.spring_product_management_api.entities.Order;
 import com.luix.spring_product_management_api.entities.User;
 import com.luix.spring_product_management_api.entities.enums.OrderStatus;
+import com.luix.spring_product_management_api.repositories.CategoryRepository;
 import com.luix.spring_product_management_api.repositories.OrderRepository;
 import com.luix.spring_product_management_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,17 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
+
+        Category cat1 = new Category(null, "Smartphones");
+        Category cat2 = new Category(null, "Tablets");
+        Category cat3 = new Category(null, "Notebooks");
+
+        categoryRepository.saveAll(Arrays.asList(cat1,cat2,cat3));
 
         User user1 = new User(null, "Luiz Felipe", "luiz.felipe@email.com", "21123456789", "adminadmin");
         User user2 = new User(null, "John Peter", "john.peter@email.com", "2305962341", "password123");

@@ -2,7 +2,6 @@ package com.luix.spring_product_management_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.luix.spring_product_management_api.entities.enums.OrderStatus;
-import com.luix.spring_product_management_api.services.OrderService;
 import jakarta.persistence.*;
 
 import java.io.Serial;

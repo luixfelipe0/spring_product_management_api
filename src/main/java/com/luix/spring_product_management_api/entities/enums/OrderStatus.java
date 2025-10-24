@@ -25,7 +25,7 @@ public enum OrderStatus {
                 return orderStatus;
             }
         }
-        throw new IllegalArgumentException("INVALID ORDERSTATUS CODE");
+        throw new IllegalArgumentException("INVALID ORDER STATUS CODE");
     }
 
 }
