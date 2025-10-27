@@ -1,14 +1,8 @@
 package com.luix.spring_product_management_api.config;
 
-import com.luix.spring_product_management_api.entities.Category;
-import com.luix.spring_product_management_api.entities.Order;
-import com.luix.spring_product_management_api.entities.Product;
-import com.luix.spring_product_management_api.entities.User;
+import com.luix.spring_product_management_api.entities.*;
 import com.luix.spring_product_management_api.entities.enums.OrderStatus;
-import com.luix.spring_product_management_api.repositories.CategoryRepository;
-import com.luix.spring_product_management_api.repositories.OrderRepository;
-import com.luix.spring_product_management_api.repositories.ProductRepository;
-import com.luix.spring_product_management_api.repositories.UserRepository;
+import com.luix.spring_product_management_api.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +27,9 @@ public class TestConfig implements CommandLineRunner {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -62,13 +59,19 @@ public class TestConfig implements CommandLineRunner {
         User user2 = new User(null, "John Peter", "john.peter@email.com", "2305962341", "password123");
         User user3 = new User(null, "Mary Kate", "mary.kate@email.com", "515867128", "123456");
 
-        Order order1 = new Order(null, Instant.parse("2025-10-05T21:05:00Z"), OrderStatus.DELIVERED, user1);
-        Order order2 = new Order(null, Instant.parse("2025-10-10T12:30:00Z"), OrderStatus.CANCELED, user2);
-        Order order3 = new Order(null, Instant.parse("2025-10-11T15:20:00Z"), OrderStatus.PAID, user3);
-        Order order4 = new Order(null, Instant.parse("2025-10-17T09:45:00Z"),  OrderStatus.WAITING_PAYMENT, user2);
+        Order o1 = new Order(null, Instant.parse("2025-10-05T21:05:00Z"), OrderStatus.DELIVERED, user1);
+        Order o2 = new Order(null, Instant.parse("2025-10-10T12:30:00Z"), OrderStatus.CANCELED, user2);
+        Order o3 = new Order(null, Instant.parse("2025-10-11T15:20:00Z"), OrderStatus.PAID, user3);
+        Order o4 = new Order(null, Instant.parse("2025-10-17T09:45:00Z"),  OrderStatus.WAITING_PAYMENT, user2);
 
         userRepository.saveAll(Arrays.asList(user1,user2,user3));
-        orderRepository.saveAll(Arrays.asList(order1,order2,order3,order4));
+        orderRepository.saveAll(Arrays.asList(o1,o2,o3,o4));
 
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
     }
 }
