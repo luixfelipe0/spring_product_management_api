@@ -1,6 +1,7 @@
 package com.luix.spring_product_management_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luix.spring_product_management_api.entities.dto.UserDto;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -37,6 +38,13 @@ public class User implements Serializable {
         this.email = email;
         this.phone = phone;
         this.password = password;
+    }
+
+    public User(UserDto dto) {
+        this.name = dto.name();
+        this.email = dto.email();
+        this.phone = dto.phone();
+        this.password = dto.password();
     }
 
     public Long getId() {

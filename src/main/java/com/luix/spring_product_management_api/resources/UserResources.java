@@ -1,13 +1,13 @@
 package com.luix.spring_product_management_api.resources;
 
 import com.luix.spring_product_management_api.entities.User;
+import com.luix.spring_product_management_api.entities.dto.UserDto;
 import com.luix.spring_product_management_api.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -28,6 +28,14 @@ public class UserResources {
     public ResponseEntity<User> findById(@PathVariable Long id) {
         User user = userService.findById(id);
         return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping
+    public ResponseEntity<User> saveUser(@RequestBody @Valid UserDto dto, UriComponentsBuilder builder) {
+        User user = userService.insertUser(dto);
+        var uri = builder.path("/{id}").buildAndExpand(user.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(user);
     }
 
 }
