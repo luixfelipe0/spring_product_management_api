@@ -2,6 +2,7 @@ package com.luix.spring_product_management_api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luix.spring_product_management_api.entities.dto.UserDto;
+import com.luix.spring_product_management_api.entities.dto.UserUpdateDto;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -95,6 +96,18 @@ public class User implements Serializable {
 
     public void setActive(boolean inactive) {
         active = inactive;
+    }
+
+    public void updateInfo(UserUpdateDto dto) {
+        if (dto.name() != null) {
+            this.name = dto.name();
+        }
+        if (dto.email() != null) {
+            this.email = dto.email();
+        }
+        if (dto.phone() != null) {
+            this.phone = dto.phone();
+        }
     }
 
     public List<Order> getOrders() {

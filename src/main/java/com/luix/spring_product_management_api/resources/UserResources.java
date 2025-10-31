@@ -2,6 +2,7 @@ package com.luix.spring_product_management_api.resources;
 
 import com.luix.spring_product_management_api.entities.User;
 import com.luix.spring_product_management_api.entities.dto.UserDto;
+import com.luix.spring_product_management_api.entities.dto.UserUpdateDto;
 import com.luix.spring_product_management_api.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -36,6 +38,13 @@ public class UserResources {
         var uri = builder.path("/{id}").buildAndExpand(user.getId()).toUri();
 
         return ResponseEntity.created(uri).body(user);
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Optional<User>> updateUser(@RequestBody UserUpdateDto dto, @PathVariable Long id) {
+        Optional<User> user = userService.updateUser(id, dto);
+        return ResponseEntity.ok().body(user);
     }
 
     @DeleteMapping("/{id}")

@@ -6,8 +6,7 @@ import jakarta.validation.constraints.Pattern;
 
 public record UserDto(
 
-        @NotBlank
-        String name,
+        @NotBlank String name,
         @NotBlank
         @Email(message = "Invalid email.")
         String email,

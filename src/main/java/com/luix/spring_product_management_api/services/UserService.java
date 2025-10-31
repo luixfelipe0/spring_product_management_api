@@ -2,6 +2,7 @@ package com.luix.spring_product_management_api.services;
 
 import com.luix.spring_product_management_api.entities.User;
 import com.luix.spring_product_management_api.entities.dto.UserDto;
+import com.luix.spring_product_management_api.entities.dto.UserUpdateDto;
 import com.luix.spring_product_management_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class UserService {
 
     public User insertUser(UserDto dto) {
         return repository.save(new User(dto));
+    }
+
+    public Optional<User> updateUser(Long id, UserUpdateDto dto) {
+        Optional<User> user = repository.findById(id);
+
+        user.ifPresent(value -> {
+            value.updateInfo(dto);
+            repository.save(value);
+        });
+        return user;
     }
 
     public void inactivateUser(Long id) {
