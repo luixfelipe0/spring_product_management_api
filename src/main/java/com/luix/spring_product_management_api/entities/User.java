@@ -25,6 +25,8 @@ public class User implements Serializable {
     private String phone;
     private String password;
 
+    private boolean active = true;
+
     @OneToMany(mappedBy = "client")
     @JsonIgnore
     private final List<Order> orders = new ArrayList<>();
@@ -85,6 +87,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean inactive) {
+        active = inactive;
     }
 
     public List<Order> getOrders() {

@@ -17,15 +17,22 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> user = repository.findById(id);
-        return user.get();
+        return user.orElse(null);
     }
 
     public List<User> findAll() {
-        return repository.findAll();
+        return repository.findAllByActiveTrue();
     }
 
     public User insertUser(UserDto dto) {
         return repository.save(new User(dto));
+    }
+
+    public void inactivateUser(Long id) {
+        repository.findById(id).ifPresent(value -> {
+            value.setActive(false);
+            repository.save(value);
+        });
     }
 
 }

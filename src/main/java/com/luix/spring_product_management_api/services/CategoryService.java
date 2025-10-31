@@ -15,8 +15,8 @@ public class CategoryService {
     private CategoryRepository repository;
 
     public Category findById(Long id) {
-        Optional<Category> Category = repository.findById(id);
-        return Category.get();
+        Optional<Category> category = repository.findById(id);
+        return category.orElse(null);
     }
 
     public List<Category> findAll() {

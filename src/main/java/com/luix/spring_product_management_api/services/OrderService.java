@@ -16,7 +16,7 @@ public class OrderService {
 
     public Order findById(Long id) {
         Optional<Order> order = repository.findById(id);
-        return order.get();
+        return order.orElse(null);
     }
 
     public List<Order> findAll() {

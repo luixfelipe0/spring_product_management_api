@@ -40,7 +40,6 @@ public class TestConfig implements CommandLineRunner {
         Product p4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", BigDecimal.valueOf(1200.0), "");
         Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", BigDecimal.valueOf(100.99), "");
 
-
         Category cat1 = new Category(null, "Electronics");
         Category cat2 = new Category(null, "TV");
         Category cat3 = new Category(null, "Books");
@@ -58,13 +57,14 @@ public class TestConfig implements CommandLineRunner {
         User user1 = new User(null, "Luiz Felipe", "luiz.felipe@email.com", "21123456789", "adminadmin");
         User user2 = new User(null, "John Peter", "john.peter@email.com", "2305962341", "password123");
         User user3 = new User(null, "Mary Kate", "mary.kate@email.com", "515867128", "123456");
+        User user4 = new User(null, "Michael Jackson", "mj@email.com", "5158671289", "125456");
 
         Order o1 = new Order(null, Instant.parse("2025-10-05T21:05:00Z"), OrderStatus.DELIVERED, user1);
         Order o2 = new Order(null, Instant.parse("2025-10-10T12:30:00Z"), OrderStatus.CANCELED, user2);
         Order o3 = new Order(null, Instant.parse("2025-10-11T15:20:00Z"), OrderStatus.PAID, user3);
         Order o4 = new Order(null, Instant.parse("2025-10-17T09:45:00Z"),  OrderStatus.WAITING_PAYMENT, user2);
 
-        userRepository.saveAll(Arrays.asList(user1,user2,user3));
+        userRepository.saveAll(Arrays.asList(user1,user2,user3,user4));
         orderRepository.saveAll(Arrays.asList(o1,o2,o3,o4));
 
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
@@ -78,6 +78,5 @@ public class TestConfig implements CommandLineRunner {
         o3.setPayment(pay1);
 
         orderRepository.save(o3);
-
     }
 }
