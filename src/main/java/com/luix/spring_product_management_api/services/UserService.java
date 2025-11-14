@@ -4,6 +4,7 @@ import com.luix.spring_product_management_api.entities.User;
 import com.luix.spring_product_management_api.entities.dto.UserDto;
 import com.luix.spring_product_management_api.entities.dto.UserUpdateDto;
 import com.luix.spring_product_management_api.repositories.UserRepository;
+import com.luix.spring_product_management_api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,7 @@ public class UserService {
     private UserRepository repository;
 
     public User findById(Long id) {
-        Optional<User> user = repository.findById(id);
-        return user.orElse(null);
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public List<User> findAll() {
@@ -29,21 +29,17 @@ public class UserService {
         return repository.save(new User(dto));
     }
 
-    public Optional<User> updateUser(Long id, UserUpdateDto dto) {
-        Optional<User> user = repository.findById(id);
+    public User updateUser(Long id, UserUpdateDto dto) {
+        User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
 
-        user.ifPresent(value -> {
-            value.updateInfo(dto);
-            repository.save(value);
-        });
-        return user;
+        user.updateInfo(dto);
+        return repository.save(user);
     }
 
     public void inactivateUser(Long id) {
-        repository.findById(id).ifPresent(value -> {
-            value.setActive(false);
-            repository.save(value);
-        });
+        User user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+            user.setActive(false);
+            repository.save(user);
     }
 
 }
