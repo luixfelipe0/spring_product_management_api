@@ -27,7 +27,7 @@ public class UserService {
     }
 
     public User insertUser(UserDto dto) {
-        return repository.save(new User(dto));
+       return repository.save(new User(dto));
     }
 
     public User updateUser(Long id, UserUpdateDto dto) {

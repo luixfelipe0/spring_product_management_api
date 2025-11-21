@@ -2,6 +2,7 @@ package com.luix.spring_product_management_api.services;
 
 import com.luix.spring_product_management_api.entities.Order;
 import com.luix.spring_product_management_api.repositories.OrderRepository;
+import com.luix.spring_product_management_api.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,7 @@ public class OrderService {
     private OrderRepository repository;
 
     public Order findById(Long id) {
-        Optional<Order> order = repository.findById(id);
-        return order.orElse(null);
+        return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public List<Order> findAll() {
