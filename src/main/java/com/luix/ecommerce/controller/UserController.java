@@ -4,6 +4,7 @@ import com.luix.ecommerce.dto.UserRequestDTO;
 import com.luix.ecommerce.dto.UserResponseDTO;
 import com.luix.ecommerce.dto.UserUpdateDTO;
 import com.luix.ecommerce.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> create(@RequestBody UserRequestDTO dto) {
+    public ResponseEntity<UserResponseDTO> create(@RequestBody @Valid UserRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(dto));
     }
 
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDTO dto) {
         return ResponseEntity.ok(service.updateUser(id, dto));
     }
 
