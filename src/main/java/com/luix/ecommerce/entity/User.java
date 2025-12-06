@@ -1,5 +1,6 @@
 package com.luix.ecommerce.entity;
 
+import com.luix.ecommerce.dto.UserUpdateDTO;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -80,6 +81,20 @@ public class User implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void updateInfo(UserUpdateDTO dto) {
+
+        if(dto.name() != null) {
+            this.name = dto.name();
+        }
+        if(dto.email() != null) {
+            this.email = dto.email();
+        }
+        if(dto.phone() != null) {
+            this.phone = dto.phone();
+        }
+
     }
 
     @Override
