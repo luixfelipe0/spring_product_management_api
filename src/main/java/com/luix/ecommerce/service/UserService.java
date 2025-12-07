@@ -26,17 +26,16 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO dto) {
-        User user = mapper.toEntity(dto);
-        User saved = repository.save(user);
-
-        return mapper.toDto(saved);
+        return mapper.toDto(
+                repository.save(mapper.toEntity(dto))
+        );
     }
 
     @Transactional(readOnly = true)
     public List<UserResponseDTO> findAllUsers() {
         return repository.findAllByActiveTrue().stream()
                 .map(mapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)

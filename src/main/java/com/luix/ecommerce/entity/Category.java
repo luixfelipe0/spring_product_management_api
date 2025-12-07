@@ -1,6 +1,7 @@
 package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luix.ecommerce.dto.CategoryUpdateDTO;
 import com.luix.spring_product_management_api.entities.Product;
 import jakarta.persistence.*;
 
@@ -29,10 +30,10 @@ public class Category implements Serializable {
     private Instant createdAt;
     private Instant updatedAt;
 
-    //todo: change imports
-    @ManyToMany(mappedBy = "categories")
-    @JsonIgnore
-    private final Set<Product> products = new HashSet<>();
+//    //todo: change imports
+//    @ManyToMany(mappedBy = "categories")
+//    @JsonIgnore
+//    private final Set<Product> products = new HashSet<>();
 
     public Category() {
     }
@@ -75,9 +76,9 @@ public class Category implements Serializable {
         this.name = name;
     }
 
-    public Set<Product> getProducts() {
-        return products;
-    }
+//    public Set<Product> getProducts() {
+//        return products;
+//    }
 
     public String getDescription() {
         return description;
@@ -130,5 +131,14 @@ public class Category implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public void updateInfo(CategoryUpdateDTO dto) {
+        if(dto.name() != null) {
+            this.name = dto.name();
+        }
+        if(dto.description() != null) {
+            this.description = dto.description();
+        }
     }
 }
