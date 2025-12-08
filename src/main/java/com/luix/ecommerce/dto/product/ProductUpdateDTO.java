@@ -1,4 +1,4 @@
-package com.luix.ecommerce.dto;
+package com.luix.ecommerce.dto.product;
 
 import java.math.BigDecimal;
 import java.util.Set;

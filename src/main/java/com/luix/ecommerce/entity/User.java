@@ -1,6 +1,6 @@
 package com.luix.ecommerce.entity;
 
-import com.luix.ecommerce.dto.UserUpdateDTO;
+import com.luix.ecommerce.dto.user.UserUpdateDTO;
 import jakarta.persistence.*;
 
 import java.io.Serial;

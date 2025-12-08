@@ -1,7 +1,7 @@
 package com.luix.ecommerce.mapper;
 
-import com.luix.ecommerce.dto.UserRequestDTO;
-import com.luix.ecommerce.dto.UserResponseDTO;
+import com.luix.ecommerce.dto.user.UserRequestDTO;
+import com.luix.ecommerce.dto.user.UserResponseDTO;
 import com.luix.ecommerce.entity.User;
 import org.springframework.stereotype.Component;
 

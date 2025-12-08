@@ -1,9 +1,6 @@
 package com.luix.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.luix.ecommerce.dto.ProductUpdateDTO;
-import com.luix.spring_product_management_api.entities.Order;
-import com.luix.spring_product_management_api.entities.OrderItem;
+import com.luix.ecommerce.dto.product.ProductUpdateDTO;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

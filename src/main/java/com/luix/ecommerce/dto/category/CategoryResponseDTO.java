@@ -1,4 +1,4 @@
-package com.luix.ecommerce.dto;
+package com.luix.ecommerce.dto.category;
 
 import java.time.Instant;
 

@@ -1,8 +1,8 @@
 package com.luix.ecommerce.service;
 
-import com.luix.ecommerce.dto.ProductRequestDTO;
-import com.luix.ecommerce.dto.ProductResponseDTO;
-import com.luix.ecommerce.dto.ProductUpdateDTO;
+import com.luix.ecommerce.dto.product.ProductRequestDTO;
+import com.luix.ecommerce.dto.product.ProductResponseDTO;
+import com.luix.ecommerce.dto.product.ProductUpdateDTO;
 import com.luix.ecommerce.entity.Category;
 import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.exception.ResourceNotFoundException;

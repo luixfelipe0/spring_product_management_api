@@ -1,8 +1,8 @@
 package com.luix.ecommerce.service;
 
-import com.luix.ecommerce.dto.UserRequestDTO;
-import com.luix.ecommerce.dto.UserResponseDTO;
-import com.luix.ecommerce.dto.UserUpdateDTO;
+import com.luix.ecommerce.dto.user.UserRequestDTO;
+import com.luix.ecommerce.dto.user.UserResponseDTO;
+import com.luix.ecommerce.dto.user.UserUpdateDTO;
 import com.luix.ecommerce.entity.User;
 import com.luix.ecommerce.exception.ResourceNotFoundException;
 import com.luix.ecommerce.mapper.UserMapper;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {

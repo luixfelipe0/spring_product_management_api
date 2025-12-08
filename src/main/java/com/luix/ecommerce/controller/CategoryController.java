@@ -1,6 +1,8 @@
 package com.luix.ecommerce.controller;
 
-import com.luix.ecommerce.dto.*;
+import com.luix.ecommerce.dto.category.CategoryRequestDTO;
+import com.luix.ecommerce.dto.category.CategoryResponseDTO;
+import com.luix.ecommerce.dto.category.CategoryUpdateDTO;
 import com.luix.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

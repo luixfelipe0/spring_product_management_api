@@ -1,7 +1,7 @@
 package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.luix.ecommerce.dto.CategoryUpdateDTO;
+import com.luix.ecommerce.dto.category.CategoryUpdateDTO;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

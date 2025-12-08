@@ -1,4 +1,4 @@
-package com.luix.ecommerce.dto;
+package com.luix.ecommerce.dto.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

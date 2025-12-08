@@ -1,7 +1,7 @@
 package com.luix.ecommerce.mapper;
 
-import com.luix.ecommerce.dto.CategoryRequestDTO;
-import com.luix.ecommerce.dto.CategoryResponseDTO;
+import com.luix.ecommerce.dto.category.CategoryRequestDTO;
+import com.luix.ecommerce.dto.category.CategoryResponseDTO;
 import com.luix.ecommerce.entity.Category;
 import org.springframework.stereotype.Component;
 
