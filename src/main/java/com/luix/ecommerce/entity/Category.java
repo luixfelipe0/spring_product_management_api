@@ -39,11 +39,10 @@ public class Category implements Serializable {
     public Category() {
     }
 
-    public Category(Long id, String name, String description, Boolean active, Instant createdAt, Instant updatedAt) {
+    public Category(Long id, String name, String description, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.active = active;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
