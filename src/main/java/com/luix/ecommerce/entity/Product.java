@@ -1,6 +1,7 @@
 package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luix.ecommerce.dto.ProductUpdateDTO;
 import com.luix.spring_product_management_api.entities.Order;
 import com.luix.spring_product_management_api.entities.OrderItem;
 import jakarta.persistence.*;
@@ -124,6 +125,21 @@ public class Product implements Serializable {
 //        }
 //        return set;
 //    }
+
+    public void updateInfo(ProductUpdateDTO dto) {
+        if (dto.name() != null) {
+            this.name = dto.name();
+        }
+        if (dto.description() != null) {
+            this.description = dto.description();
+        }
+        if (dto.price() != null) {
+            this.price = dto.price();
+        }
+        if (dto.imgUrl() != null) {
+            this.imgUrl = dto.imgUrl();
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

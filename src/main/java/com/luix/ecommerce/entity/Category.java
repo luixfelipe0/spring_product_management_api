@@ -25,7 +25,7 @@ public class Category implements Serializable {
     private Long id;
     private String name;
     private String description;
-    private Boolean active;
+    private Boolean active = true;
 
     @CreationTimestamp
     private Instant createdAt;
