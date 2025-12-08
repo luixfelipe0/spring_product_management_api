@@ -84,12 +84,4 @@ public class OrderItem implements Serializable {
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-                "id=" + id +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                '}';
-    }
 }
