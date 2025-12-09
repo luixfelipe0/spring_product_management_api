@@ -1,5 +1,6 @@
 package com.luix.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luix.ecommerce.dto.product.ProductUpdateDTO;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -40,8 +41,8 @@ public class Product implements Serializable {
     inverseJoinColumns = @JoinColumn(name = "category_id"))
     private final Set<com.luix.ecommerce.entity.Category> categories = new HashSet<>();
 
-//    @OneToMany(mappedBy = "id.product")
-//    private final Set<OrderItem> items = new HashSet<>();
+    @OneToMany(mappedBy = "id.product")
+    private final Set<OrderItem> items = new HashSet<>();
 
     public Product() {
     }
@@ -114,14 +115,14 @@ public class Product implements Serializable {
         return updatedAt;
     }
 
-//    @JsonIgnore
-//    public Set<Order> getOrders() {
-//        Set<Order> set = new HashSet<>();
-//        for (OrderItem x : items) {
-//            set.add(x.getOrder());
-//        }
-//        return set;
-//    }
+    @JsonIgnore
+    public Set<Order> getOrders() {
+        Set<Order> set = new HashSet<>();
+        for (OrderItem x : items) {
+            set.add(x.getOrder());
+        }
+        return set;
+    }
 
     public void updateInfo(ProductUpdateDTO dto) {
         if (dto.name() != null) {

@@ -1,7 +1,7 @@
 package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.luix.spring_product_management_api.entities.OrderItem;
+import com.luix.ecommerce.entity.OrderItem;
 import com.luix.spring_product_management_api.entities.Payment;
 import com.luix.ecommerce.entity.enums.OrderStatus;
 import jakarta.persistence.*;
