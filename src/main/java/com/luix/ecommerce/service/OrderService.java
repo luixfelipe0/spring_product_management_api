@@ -7,6 +7,7 @@ import com.luix.ecommerce.entity.Order;
 import com.luix.ecommerce.entity.OrderItem;
 import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.entity.User;
+import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.exception.RequestValidationException;
 import com.luix.ecommerce.exception.ResourceNotFoundException;
 import com.luix.ecommerce.mapper.OrderMapper;
@@ -84,6 +85,15 @@ public class OrderService {
                 .toList();
     }
 
+    public OrderResponseDTO updateStatus(Long id, String newStatus) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
+        order.setOrderStatus(OrderStatus.valueOf(newStatus));
+
+        order = orderRepository.save(order);
+
+        return mapper.toDto(order);
+    }
 
 }
