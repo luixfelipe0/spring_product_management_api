@@ -26,16 +26,19 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderMapper mapper;
+    private final OrderStatusValidator statusValidator;
 
     public OrderService(OrderRepository orderRepository,
                         UserRepository userRepository,
                         ProductRepository productRepository,
-                        OrderMapper mapper
+                        OrderMapper mapper,
+                        OrderStatusValidator statusValidator
     ) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.mapper = mapper;
+        this.statusValidator = statusValidator;
     }
 
     @Transactional
@@ -88,11 +91,20 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        order.setOrderStatus(OrderStatus.valueOf(newStatus));
+        OrderStatus current = order.getOrderStatus();
+        OrderStatus target;
 
+        try {
+            target = OrderStatus.valueOf(newStatus);
+        } catch (IllegalArgumentException e) {
+            throw new RequestValidationException("Invalid order status: " + newStatus);
+        }
+
+        statusValidator.validate(current,target);
+
+        order.setOrderStatus(target);
         order = orderRepository.save(order);
 
         return mapper.toDto(order);
     }
-
 }
