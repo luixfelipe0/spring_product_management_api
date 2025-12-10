@@ -16,6 +16,8 @@ import com.luix.ecommerce.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class OrderService {
 
@@ -46,18 +48,42 @@ public class OrderService {
         }
 
         Order order = mapper.toEntity(dto, client);
-        orderRepository.save(order);
+        order = orderRepository.save(order);
 
         for (OrderItemRequestDTO itemDto : dto.items()) {
             Product product = productRepository.findById(itemDto.productId())
                     .orElseThrow(() -> new ResourceNotFoundException(itemDto.productId()));
 
-            OrderItem item = mapper.toEntityItem(itemDto, order, product);
+            OrderItem item = new OrderItem(
+                    order,
+                    product,
+                    itemDto.quantity(),
+                    product.getPrice()
+            );
+
             order.getItems().add(item);
         }
 
         order = orderRepository.save(order);
         return mapper.toDto(order);
     }
+
+    @Transactional(readOnly = true)
+    public OrderResponseDTO findOrderById(Long id) {
+        return mapper.toDto(
+                orderRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException(id))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderResponseDTO> findAllOrders() {
+        return orderRepository.findAllByActiveTrue()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+
 
 }

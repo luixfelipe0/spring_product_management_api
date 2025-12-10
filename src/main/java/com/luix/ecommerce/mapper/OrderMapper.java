@@ -8,6 +8,7 @@ import com.luix.ecommerce.entity.Order;
 import com.luix.ecommerce.entity.OrderItem;
 import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.entity.User;
+import com.luix.ecommerce.entity.enums.OrderStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +17,7 @@ public class OrderMapper {
     public Order toEntity(OrderRequestDTO dto, User client) {
         Order order = new Order();
         order.setClient(client);
+        order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
         return order;
     }
 
@@ -24,7 +26,7 @@ public class OrderMapper {
                 order,
                 product,
                 dto.quantity(),
-                dto.price()
+                product.getPrice()
         );
     }
 
@@ -32,7 +34,7 @@ public class OrderMapper {
         return new OrderResponseDTO(
                 order.getId(),
                 order.getCreatedAt(),
-                order.getOrderStatus().getValue(),
+                order.getOrderStatus().name(),
                 order.getClient().getId(),
                 order.getItems()
                         .stream()
