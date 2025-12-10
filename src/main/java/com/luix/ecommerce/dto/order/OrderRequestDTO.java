@@ -9,7 +9,7 @@ public record OrderRequestDTO(
         @NotNull
         Long clientId,
         @NotNull
-        List<OrderRequestDTO> items
+        List<OrderItemRequestDTO> items
 
 ) {
 }

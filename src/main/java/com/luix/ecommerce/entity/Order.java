@@ -1,9 +1,8 @@
 package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.luix.ecommerce.entity.OrderItem;
-import com.luix.spring_product_management_api.entities.Payment;
 import com.luix.ecommerce.entity.enums.OrderStatus;
+import com.luix.spring_product_management_api.entities.Payment;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -45,8 +44,8 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "id.order")
     private final Set<OrderItem> items = new HashSet<>();
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Payment payment;
+//    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+//    private Payment payment;
 
     public Order() {
     }
@@ -96,13 +95,13 @@ public class Order implements Serializable {
         this.client = client;
     }
 
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
+//    public Payment getPayment() {
+//        return payment;
+//    }
+//
+//    public void setPayment(Payment payment) {
+//        this.payment = payment;
+//    }
 
     public BigDecimal getTotal() {
         return items
