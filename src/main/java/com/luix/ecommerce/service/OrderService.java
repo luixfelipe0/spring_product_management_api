@@ -55,11 +55,10 @@ public class OrderService {
             Product product = productRepository.findById(itemDto.productId())
                     .orElseThrow(() -> new ResourceNotFoundException(itemDto.productId()));
 
-            OrderItem item = new OrderItem(
+            OrderItem item = mapper.toEntityItem(
+                    itemDto,
                     order,
-                    product,
-                    itemDto.quantity(),
-                    product.getPrice()
+                    product
             );
 
             order.getItems().add(item);
@@ -79,7 +78,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponseDTO> findAllOrders() {
-        return orderRepository.findAllByActiveTrue()
+        return orderRepository.findAll()
                 .stream()
                 .map(mapper::toDto)
                 .toList();
