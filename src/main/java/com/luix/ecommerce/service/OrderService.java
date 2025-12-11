@@ -11,6 +11,7 @@ import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.exception.RequestValidationException;
 import com.luix.ecommerce.exception.ResourceNotFoundException;
 import com.luix.ecommerce.mapper.OrderMapper;
+import com.luix.ecommerce.repository.OrderItemRepository;
 import com.luix.ecommerce.repository.OrderRepository;
 import com.luix.ecommerce.repository.ProductRepository;
 import com.luix.ecommerce.repository.UserRepository;
@@ -27,18 +28,21 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final OrderMapper mapper;
     private final OrderStatusValidator statusValidator;
+    private final OrderItemRepository orderItemRepository;
 
     public OrderService(OrderRepository orderRepository,
                         UserRepository userRepository,
                         ProductRepository productRepository,
                         OrderMapper mapper,
-                        OrderStatusValidator statusValidator
+                        OrderStatusValidator statusValidator,
+                        OrderItemRepository orderItemRepository
     ) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.mapper = mapper;
         this.statusValidator = statusValidator;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Transactional
@@ -64,10 +68,9 @@ public class OrderService {
                     product
             );
 
+            orderItemRepository.save(item);
             order.getItems().add(item);
         }
-
-        order = orderRepository.save(order);
         return mapper.toDto(order);
     }
 

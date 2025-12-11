@@ -35,7 +35,7 @@ public class OrderStatusValidator {
 
         Set<OrderStatus> allowed = transitions.get(current);
 
-        if (allowed == null || !allowed.contains(target)); {
+        if (allowed == null || !allowed.contains(target)) {
             throw new RequestValidationException(
                     "Invalid status transition: " + current + " -> " + target
             );
