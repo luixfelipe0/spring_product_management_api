@@ -25,24 +25,21 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final ProductRepository productRepository;
     private final OrderMapper mapper;
     private final OrderStatusValidator statusValidator;
-    private final OrderItemRepository orderItemRepository;
+    private final OrderItemService orderItemService;
 
     public OrderService(OrderRepository orderRepository,
                         UserRepository userRepository,
-                        ProductRepository productRepository,
                         OrderMapper mapper,
                         OrderStatusValidator statusValidator,
-                        OrderItemRepository orderItemRepository
+                        OrderItemService orderItemService
     ) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
-        this.productRepository = productRepository;
         this.mapper = mapper;
         this.statusValidator = statusValidator;
-        this.orderItemRepository = orderItemRepository;
+        this.orderItemService = orderItemService;
     }
 
     @Transactional
@@ -58,19 +55,8 @@ public class OrderService {
         Order order = mapper.toEntity(dto, client);
         order = orderRepository.save(order);
 
-        for (OrderItemRequestDTO itemDto : dto.items()) {
-            Product product = productRepository.findById(itemDto.productId())
-                    .orElseThrow(() -> new ResourceNotFoundException(itemDto.productId()));
+        orderItemService.createItemsForOrder(order, dto.items());
 
-            OrderItem item = mapper.toEntityItem(
-                    itemDto,
-                    order,
-                    product
-            );
-
-            orderItemRepository.save(item);
-            order.getItems().add(item);
-        }
         return mapper.toDto(order);
     }
 
