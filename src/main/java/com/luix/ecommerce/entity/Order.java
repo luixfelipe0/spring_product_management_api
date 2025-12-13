@@ -2,7 +2,6 @@ package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.luix.ecommerce.entity.enums.OrderStatus;
-import com.luix.spring_product_management_api.entities.Payment;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -41,7 +40,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
-    @OneToMany(mappedBy = "id.order")
+    @OneToMany(mappedBy = "order")
     private final Set<OrderItem> items = new HashSet<>();
 
 //    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)

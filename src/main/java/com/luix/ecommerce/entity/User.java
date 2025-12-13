@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_users")
@@ -23,6 +25,9 @@ public class User implements Serializable {
     private String phone;
 
     private boolean active = true;
+
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    private final Set<Order> orders = new HashSet<>();
 
     public User() {
     }
@@ -81,6 +86,10 @@ public class User implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
     }
 
     public void updateInfo(UserUpdateDTO dto) {

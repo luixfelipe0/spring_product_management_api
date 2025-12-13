@@ -41,7 +41,7 @@ public class Product implements Serializable {
     inverseJoinColumns = @JoinColumn(name = "category_id"))
     private final Set<com.luix.ecommerce.entity.Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "id.product")
+    @OneToMany(mappedBy = "product")
     private final Set<OrderItem> items = new HashSet<>();
 
     public Product() {

@@ -1,10 +1,7 @@
 package com.luix.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.luix.ecommerce.entity.pk.OrderItemPk;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,14 +9,25 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_order_items")
+@Table(name = "tb_order_items", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"order.id", "product.id"})
+})
 public class OrderItem implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @EmbeddedId
-    private final OrderItemPk id = new OrderItemPk();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     private Integer quantity;
     private BigDecimal price;
@@ -28,28 +36,36 @@ public class OrderItem implements Serializable {
     }
 
     public OrderItem(Order order, Product product, Integer quantity, BigDecimal price) {
-        id.setOrder(order);
-        id.setProduct(product);
+        this.order = order;
+        this.product = product;
         this.quantity = quantity;
         this.price = price;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @JsonIgnore
     public Order getOrder() {
-        return id.getOrder();
+        return order;
     }
     
     public void setOrder(Order order) {
-        id.setOrder(order);
+        this.order = order;
     }
 
     @JsonIgnore
     public Product getProduct() {
-        return id.getProduct();
+        return product;
     }
     
     public void setProduct(Product product) {
-        id.setProduct(product);
+        this.product = product;
     }
 
     public Integer getQuantity() {
@@ -77,7 +93,6 @@ public class OrderItem implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
         return Objects.equals(id, orderItem.id);
@@ -87,5 +102,4 @@ public class OrderItem implements Serializable {
     public int hashCode() {
         return Objects.hashCode(id);
     }
-
 }
