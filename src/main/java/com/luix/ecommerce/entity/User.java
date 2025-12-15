@@ -29,6 +29,12 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private final Set<Order> orders = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tb_role_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private final Set<Role> roles = new HashSet<>();
+
     public User() {
     }
 
@@ -90,6 +96,10 @@ public class User implements Serializable {
 
     public Set<Order> getOrders() {
         return orders;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public void updateInfo(UserUpdateDTO dto) {
