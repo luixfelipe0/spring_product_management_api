@@ -24,7 +24,7 @@ public class Role implements Serializable {
 
     public Role(Long id, String authority) {
         this.id = id;
-        this.authority = authority;
+        setAuthority(authority);
     }
 
     public Long getId() {
@@ -40,7 +40,13 @@ public class Role implements Serializable {
     }
 
     public void setAuthority(String authority) {
-        this.authority = authority;
+        String upperCaseAuthority = authority.toUpperCase();
+
+        if (!upperCaseAuthority.startsWith("ROLE_")) {
+            this.authority = "ROLE_" + upperCaseAuthority;
+        } else {
+            this.authority = upperCaseAuthority;
+        }
     }
 
     @Override
