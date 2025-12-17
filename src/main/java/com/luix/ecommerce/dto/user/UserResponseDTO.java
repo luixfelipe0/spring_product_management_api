@@ -5,9 +5,7 @@ public record UserResponseDTO(
         Long id,
         String name,
         String email,
-        String phone,
-        String accessToken,
-        Long expiresIn
+        String phone
 
 ) {
 }
