@@ -9,6 +9,7 @@ import com.luix.ecommerce.entity.Product;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,29 +22,29 @@ public class TestConfig implements CommandLineRunner {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final PasswordEncoder encoder;
 
-    public TestConfig(UserRepository userRepository, CategoryRepository categoryRepository, ProductRepository productRepository) {
+    public TestConfig(UserRepository userRepository, CategoryRepository categoryRepository, ProductRepository productRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.encoder = encoder;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
-        User user1 = new User(null,
-                "Luiz Felipe",
-                "luiz.felipe@email.com",
-                "abcde123",
-                "21912345678"
-        );
+        User user1 = new User();
+        user1.setName("Luiz Felipe");
+        user1.setEmail("luiz.felipe@email.com");
+        user1.setPassword(encoder.encode("abcde123"));
+        user1.setPhone("21123456789");
 
-        User user2 = new User(null,
-                "Ana Carolina",
-                "ana.carolina@email.com",
-                "abcde123",
-                "21912345670"
-        );
+        User user2 = new User();
+        user2.setName("Ana Carolina");
+        user2.setEmail("ana.carolina@email.com");
+        user2.setPassword(encoder.encode("12345678"));
+        user2.setPhone("21789456123");
 
         userRepository.saveAll(List.of(user1,user2));
 
