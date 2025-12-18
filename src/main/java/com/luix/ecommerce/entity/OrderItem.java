@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_order_items", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"order.id", "product.id"})
+        @UniqueConstraint(columnNames = {"order_id", "product_id"})
 })
 public class OrderItem implements Serializable {
 
