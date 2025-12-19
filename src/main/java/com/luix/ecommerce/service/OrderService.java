@@ -3,6 +3,7 @@ package com.luix.ecommerce.service;
 import com.luix.ecommerce.dto.order.OrderRequestDTO;
 import com.luix.ecommerce.dto.order.OrderResponseDTO;
 import com.luix.ecommerce.entity.Order;
+import com.luix.ecommerce.entity.OrderItem;
 import com.luix.ecommerce.entity.User;
 import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.exception.RequestValidationException;
@@ -24,18 +25,20 @@ public class OrderService {
     private final OrderMapper mapper;
     private final OrderStatusValidator statusValidator;
     private final OrderItemService orderItemService;
+    private final StockService stockService;
 
     public OrderService(OrderRepository orderRepository,
                         UserRepository userRepository,
                         OrderMapper mapper,
                         OrderStatusValidator statusValidator,
-                        OrderItemService orderItemService
+                        OrderItemService orderItemService, StockService stockService
     ) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.statusValidator = statusValidator;
         this.orderItemService = orderItemService;
+        this.stockService = stockService;
     }
 
     @Transactional
@@ -73,7 +76,9 @@ public class OrderService {
                 .toList();
     }
 
+    @Transactional
     public OrderResponseDTO updateStatus(Long id, String newStatus) {
+
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
@@ -87,6 +92,12 @@ public class OrderService {
         }
 
         statusValidator.validate(current,target);
+
+        if (target == OrderStatus.CANCELED && current != OrderStatus.CANCELED) {
+            for (OrderItem item : order.getItems()) {
+                stockService.releaseStock(item.getProduct(), item.getQuantity());
+            }
+        }
 
         order.setOrderStatus(target);
         order = orderRepository.save(order);

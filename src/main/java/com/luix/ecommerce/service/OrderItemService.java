@@ -25,15 +25,18 @@ public class OrderItemService {
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
+    private final StockService stockService;
 
     public OrderItemService(
             ProductRepository productRepository,
             OrderItemRepository orderItemRepository,
-            OrderMapper orderMapper
+            OrderMapper orderMapper,
+            StockService stockService
     ) {
         this.productRepository = productRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderMapper = orderMapper;
+        this.stockService = stockService;
     }
 
     @Transactional
@@ -51,6 +54,8 @@ public class OrderItemService {
                         .map(OrderItemRequestDTO::productId)
                         .toList()
         ).stream().collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        stockService.reserveStock(productMap, itemsDto);
 
         List<OrderItem> items = itemsDto.stream()
                 .map(itemDto -> {
