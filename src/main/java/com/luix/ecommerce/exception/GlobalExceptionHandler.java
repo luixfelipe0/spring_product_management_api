@@ -78,6 +78,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(StockInsufficientException.class)
+    public ResponseEntity<StandardExceptionMessage> stockInsufficient(StockInsufficientException e, HttpServletRequest request) {
+        String error = "This item is out of stock.";
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        StandardExceptionMessage err = new StandardExceptionMessage(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     @ExceptionHandler(GenericHandlerException.class)
     public ResponseEntity<StandardExceptionMessage> genericHandler(GenericHandlerException e, HttpServletRequest request) {
         String error = "Internal server error.";

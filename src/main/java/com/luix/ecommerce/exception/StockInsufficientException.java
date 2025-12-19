@@ -1,7 +1,7 @@
 package com.luix.ecommerce.exception;
 
-public class DuplicatedItemException extends RuntimeException {
-    public DuplicatedItemException(String message) {
-        super("Order contains duplicate products");
+public class StockInsufficientException extends RuntimeException {
+    public StockInsufficientException(String message) {
+        super(message);
     }
 }
