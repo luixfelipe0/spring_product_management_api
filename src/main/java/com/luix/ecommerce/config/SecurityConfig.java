@@ -52,6 +52,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/products").hasAuthority("SCOPE_ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("SCOPE_ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("SCOPE_ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults())
