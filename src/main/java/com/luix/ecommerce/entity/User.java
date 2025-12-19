@@ -76,8 +76,17 @@ public class User implements Serializable, UserDetails {
         this.email = email;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("Verificando role do user " + this.email + ": " + this.role);
         if(this.role == UserRole.ADMIN) {
             return List.of(
                     new SimpleGrantedAuthority("ROLE_ADMIN"),

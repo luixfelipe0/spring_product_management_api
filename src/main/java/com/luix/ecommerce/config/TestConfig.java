@@ -2,6 +2,7 @@ package com.luix.ecommerce.config;
 
 import com.luix.ecommerce.entity.Category;
 import com.luix.ecommerce.entity.User;
+import com.luix.ecommerce.entity.enums.UserRole;
 import com.luix.ecommerce.repository.CategoryRepository;
 import com.luix.ecommerce.repository.ProductRepository;
 import com.luix.ecommerce.repository.UserRepository;
@@ -34,19 +35,23 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        User user1 = new User();
-        user1.setName("Luiz Felipe");
-        user1.setEmail("luiz.felipe@email.com");
-        user1.setPassword(encoder.encode("abcde123"));
-        user1.setPhone("21123456789");
+        userRepository.deleteAll();
 
-        User user2 = new User();
-        user2.setName("Ana Carolina");
-        user2.setEmail("ana.carolina@email.com");
-        user2.setPassword(encoder.encode("12345678"));
-        user2.setPhone("21789456123");
+        User admin = new User();
+        admin.setName("Luiz Felipe");
+        admin.setEmail("luiz.felipe@email.com");
+        admin.setPassword(encoder.encode("admin123"));
+        admin.setPhone("21123456789");
+        admin.setRole(UserRole.ADMIN);
 
-        userRepository.saveAll(List.of(user1,user2));
+        User user = new User();
+        user.setName("Ana Carolina");
+        user.setEmail("ana.carolina@email.com");
+        user.setPassword(encoder.encode("12345678"));
+        user.setPhone("21789456123");
+        user.setRole(UserRole.USER);
+
+        userRepository.saveAll(List.of(admin,user));
 
         Category c1 = new Category();
         c1.setName("Eletrônicos");

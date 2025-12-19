@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +50,7 @@ public class SecurityConfig {
         https
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console()).permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -57,8 +59,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/products").hasAuthority("SCOPE_ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products/**").hasAuthority("SCOPE_ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products/**").hasAuthority("SCOPE_ROLE_ADMIN")
+
+                        .requestMatchers("/orders/**").hasAuthority("SCOPE_ROLE_USER")
                         .anyRequest().authenticated()
                 )
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .httpBasic(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(withDefaults())
