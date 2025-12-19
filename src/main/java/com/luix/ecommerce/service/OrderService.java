@@ -1,20 +1,16 @@
 package com.luix.ecommerce.service;
 
-import com.luix.ecommerce.dto.order.OrderItemRequestDTO;
 import com.luix.ecommerce.dto.order.OrderRequestDTO;
 import com.luix.ecommerce.dto.order.OrderResponseDTO;
 import com.luix.ecommerce.entity.Order;
-import com.luix.ecommerce.entity.OrderItem;
-import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.entity.User;
 import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.exception.RequestValidationException;
 import com.luix.ecommerce.exception.ResourceNotFoundException;
 import com.luix.ecommerce.mapper.OrderMapper;
-import com.luix.ecommerce.repository.OrderItemRepository;
 import com.luix.ecommerce.repository.OrderRepository;
-import com.luix.ecommerce.repository.ProductRepository;
 import com.luix.ecommerce.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,16 +39,17 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDTO createOrder(OrderRequestDTO dto) {
+    public OrderResponseDTO createOrder(OrderRequestDTO dto, String userEmail) {
 
-        User client = userRepository.findById(dto.clientId())
-                .orElseThrow(() -> new ResourceNotFoundException(dto.clientId()));
+        User client = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("This email does not exists."));
 
         if (!client.isActive()) {
-            throw new RequestValidationException("User is inactive, can't proceed with order.");
+            throw new RequestValidationException("User is inactive, can't proceed.");
         }
 
         Order order = mapper.toEntity(dto, client);
+        order.setOrderStatus(OrderStatus.WAITING_PAYMENT);
         order = orderRepository.save(order);
 
         orderItemService.createItemsForOrder(order, dto.items());

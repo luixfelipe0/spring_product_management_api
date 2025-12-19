@@ -7,6 +7,7 @@ import com.luix.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> create(@Valid @RequestBody OrderRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrder(dto));
+    public ResponseEntity<OrderResponseDTO> create(@Valid @RequestBody OrderRequestDTO dto, Authentication authentication) {
+        String userEmail = authentication.getName();
+
+        OrderResponseDTO response = service.createOrder(dto, userEmail);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping

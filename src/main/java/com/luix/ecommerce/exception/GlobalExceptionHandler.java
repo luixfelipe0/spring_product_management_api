@@ -69,6 +69,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(DuplicatedItemException.class)
+    public ResponseEntity<StandardExceptionMessage> duplicatedItem(DuplicatedItemException e, HttpServletRequest request) {
+        String error = "Order contains duplicate products";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        StandardExceptionMessage err = new StandardExceptionMessage(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     @ExceptionHandler(GenericHandlerException.class)
     public ResponseEntity<StandardExceptionMessage> genericHandler(GenericHandlerException e, HttpServletRequest request) {
         String error = "Internal server error.";
