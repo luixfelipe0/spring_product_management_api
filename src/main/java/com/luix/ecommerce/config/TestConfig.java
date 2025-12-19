@@ -71,11 +71,13 @@ public class TestConfig implements CommandLineRunner {
         p1.setName("Mouse Gamer");
         p1.setPrice(BigDecimal.valueOf(129.99));
         p1.getCategories().addAll(Set.of(c1,c2));
+        p1.setStockQuantity(50);
 
         Product p2 = new Product();
         p2.setName("Fone Bluetooth");
         p2.setPrice(BigDecimal.valueOf(199.90));
         p2.getCategories().addAll(Set.of(c1,c3));
+        p2.setStockQuantity(30);
 
         productRepository.saveAll(List.of(p1,p2));
 
