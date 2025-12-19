@@ -30,6 +30,12 @@ public class Product implements Serializable {
     private String imgUrl;
     private Boolean active = true;
 
+    @Column(nullable = false)
+    private Integer stockQuantity;
+
+    @Version
+    private Long version;
+
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp
@@ -105,6 +111,14 @@ public class Product implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Integer getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
     public Instant getCreatedAt() {
