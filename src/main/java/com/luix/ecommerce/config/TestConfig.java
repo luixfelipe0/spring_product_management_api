@@ -1,18 +1,17 @@
 package com.luix.ecommerce.config;
 
-import com.luix.ecommerce.entity.Category;
-import com.luix.ecommerce.entity.User;
+import com.luix.ecommerce.entity.*;
+import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.entity.enums.UserRole;
-import com.luix.ecommerce.repository.CategoryRepository;
-import com.luix.ecommerce.repository.ProductRepository;
-import com.luix.ecommerce.repository.UserRepository;
-import com.luix.ecommerce.entity.Product;
+import com.luix.ecommerce.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -23,12 +22,16 @@ public class TestConfig implements CommandLineRunner {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final PasswordEncoder encoder;
 
-    public TestConfig(UserRepository userRepository, CategoryRepository categoryRepository, ProductRepository productRepository, PasswordEncoder encoder) {
+    public TestConfig(UserRepository userRepository, CategoryRepository categoryRepository, ProductRepository productRepository, OrderRepository orderRepository, OrderItemRepository orderItemRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
         this.encoder = encoder;
     }
 
@@ -81,5 +84,35 @@ public class TestConfig implements CommandLineRunner {
 
         productRepository.saveAll(List.of(p1,p2));
 
+        //TO-DO: Seed orders
+
+        Order o1 = new Order();
+        o1.setClient(user);
+        o1.setOrderStatus(OrderStatus.WAITING_PAYMENT);
+        Order o2 = new Order();
+        o2.setClient(user);
+        o2.setOrderStatus(OrderStatus.WAITING_PAYMENT);
+
+        orderRepository.saveAll(Arrays.asList(o1,o2));
+
+        OrderItem oi1 = new OrderItem();
+        oi1.setQuantity(1);
+        oi1.setProduct(p1);
+        oi1.setOrder(o1);
+        oi1.setPrice(p1.getPrice());
+
+        OrderItem oi2 = new OrderItem();
+        oi2.setQuantity(2);
+        oi2.setProduct(p2);
+        oi2.setOrder(o2);
+        oi2.setPrice(p2.getPrice());
+
+
+        orderItemRepository.saveAll(Arrays.asList(oi1,oi2));
+
+        o1.getItems().add(oi1);
+        o2.getItems().add(oi2);
+
+        orderRepository.saveAll(Arrays.asList(o1,o2));
     }
 }
