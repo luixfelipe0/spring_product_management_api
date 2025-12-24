@@ -87,6 +87,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(StripePaymentSessionException.class)
+    public ResponseEntity<StandardExceptionMessage> stripePayment(StripePaymentSessionException e, HttpServletRequest request) {
+        String error = "Failed to create Stripe payment session.";
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        StandardExceptionMessage err = new StandardExceptionMessage(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     @ExceptionHandler(GenericHandlerException.class)
     public ResponseEntity<StandardExceptionMessage> genericHandler(GenericHandlerException e, HttpServletRequest request) {
         String error = "Internal server error.";

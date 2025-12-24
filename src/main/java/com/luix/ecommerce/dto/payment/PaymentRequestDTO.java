@@ -2,7 +2,7 @@ package com.luix.ecommerce.dto.payment;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record PaymentDTO(
+public record PaymentRequestDTO(
 
         @NotBlank(message = "Card number is required.")
         String cardNumber,

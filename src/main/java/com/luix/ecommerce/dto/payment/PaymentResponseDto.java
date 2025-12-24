@@ -1,4 +1,8 @@
 package com.luix.ecommerce.dto.payment;
 
-public record PaymentResponseDto() {
+public record PaymentResponseDto(
+
+        String paymentUrl
+
+) {
 }
