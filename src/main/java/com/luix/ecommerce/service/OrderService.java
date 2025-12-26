@@ -4,6 +4,7 @@ import com.luix.ecommerce.dto.order.OrderRequestDTO;
 import com.luix.ecommerce.dto.order.OrderResponseDTO;
 import com.luix.ecommerce.entity.Order;
 import com.luix.ecommerce.entity.OrderItem;
+import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.entity.User;
 import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.exception.RequestValidationException;
@@ -104,4 +105,23 @@ public class OrderService {
 
         return mapper.toDto(order);
     }
+
+    @Transactional
+    public void cancelOrder(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException(orderId));
+
+        if (!"CANCELED".equals(order.getOrderStatus()) && !"PAID".equals(order.getOrderStatus())) {
+            updateStatus(order.getId(), "CANCELED");
+
+            order.getItems().forEach(orderItem -> {
+                        stockService.releaseStock(orderItem.getProduct(), orderItem.getQuantity());
+                    });
+            System.out.println("Order " + orderId + " has been canceled and stock released.");
+        } else {
+            System.out.println("Order " + orderId + " is already processed (Status: " + order.getOrderStatus() + ")");
+        }
+    }
+
 }

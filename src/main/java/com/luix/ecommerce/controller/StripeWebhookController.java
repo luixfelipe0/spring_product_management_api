@@ -61,6 +61,28 @@ public class StripeWebhookController {
                 orderService.updateStatus(orderId, "PAID");
                 System.out.println("Order: " + orderId + " successfully paid!");
             }
+        } else if ("checkout.session.expired".equals(event.getType())) {
+            System.out.println(">>> Expiration event received!");
+
+            EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
+            Session session = null;
+
+            if (dataObjectDeserializer.getObject().isPresent()) {
+                session = (Session) dataObjectDeserializer.getObject().get();
+            } else {
+                session = (Session) dataObjectDeserializer.deserializeUnsafe();
+            }
+
+            if (session != null) {
+                String orderIdStr = session.getMetadata().get("order_id");
+                if (orderIdStr != null) {
+                    Long orderId = Long.parseLong(orderIdStr);
+
+                    System.out.println(">>> Canceling expired order: " + orderId);
+                    orderService.cancelOrder(orderId);
+                }
+            }
+
         }
         return ResponseEntity.ok().build();
     }
