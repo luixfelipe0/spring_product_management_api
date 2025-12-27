@@ -13,6 +13,8 @@ import com.luix.ecommerce.mapper.OrderMapper;
 import com.luix.ecommerce.repository.OrderRepository;
 import com.luix.ecommerce.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,8 @@ public class OrderService {
     private final OrderStatusValidator statusValidator;
     private final OrderItemService orderItemService;
     private final StockService stockService;
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     public OrderService(OrderRepository orderRepository,
                         UserRepository userRepository,
@@ -44,7 +48,6 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO dto, String userEmail) {
-
         User client = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("This email does not exists."));
 
@@ -79,7 +82,6 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDTO updateStatus(Long id, String newStatus) {
-
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
@@ -108,19 +110,18 @@ public class OrderService {
 
     @Transactional
     public void cancelOrder(Long orderId) {
-
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException(orderId));
 
-        if (!"CANCELED".equals(order.getOrderStatus()) && !"PAID".equals(order.getOrderStatus())) {
+        if (order.getOrderStatus() != OrderStatus.CANCELED && order.getOrderStatus() != OrderStatus.PAID) {
             updateStatus(order.getId(), "CANCELED");
 
             order.getItems().forEach(orderItem -> {
                         stockService.releaseStock(orderItem.getProduct(), orderItem.getQuantity());
                     });
-            System.out.println("Order " + orderId + " has been canceled and stock released.");
+            logger.info("Order {} has been canceled and stock released.", orderId);
         } else {
-            System.out.println("Order " + orderId + " is already processed (Status: " + order.getOrderStatus() + ")");
+            logger.warn("Attempt to cancel order {} failed. Current status: {}", orderId, order.getOrderStatus());
         }
     }
 
