@@ -1,5 +1,6 @@
 package com.luix.ecommerce.controller;
 
+import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.service.OrderService;
 import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.SignatureVerificationException;
@@ -10,7 +11,6 @@ import com.stripe.net.Webhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,25 +35,23 @@ public class StripeWebhookController {
             @RequestHeader("Stripe-Signature") String sigHeader
     ) {
         Event event;
-
         try {
             event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
-
-            logger.info(">>> Webhook received! Event type: {}", event.getType());
+            logger.info("Webhook received! Event type: {}", event.getType());
         } catch (SignatureVerificationException e) {
             logger.warn("Invalid signature: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
+            return ResponseEntity.badRequest().body("Invalid signature");
         } catch (Exception e) {
-            logger.error("Parsing error", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Parsing error");
+            logger.error("Error parsing webhook", e);
+            return ResponseEntity.internalServerError().body("Parsing error");
         }
 
-        if ("checkout.session.completed".equals(event.getType())) {
-            processCompletedSession(event);
-        } else if ("checkout.session.expired".equals(event.getType())) {
-           processExpiredSession(event);
+        switch (event.getType()) {
+            case "checkout.session.completed" -> processCompletedSession(event);
+            case "checkout.session.expired" -> processExpiredSession(event);
+            default -> logger.info("Unhandled event type: {}", event.getType());
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.accepted().body("Event processed");
     }
 
     private void processCompletedSession(Event event) {
@@ -62,8 +60,8 @@ public class StripeWebhookController {
             Long orderId = getOrderIdFromMetadata(session);
             if (orderId != null) {
                 try {
-                    orderService.updateStatus(orderId, "PAID");
-                    logger.info("Order {} succefully paid!", orderId);
+                    orderService.updateStatus(orderId, OrderStatus.PAID);
+                    logger.info("Order {} successfully marked as PAID!", orderId);
                 } catch (Exception e) {
                     logger.error("Error updating order status for id: {}", orderId, e);
                 }
@@ -89,27 +87,34 @@ public class StripeWebhookController {
 
     private Session getSessionFromEvent(Event event) {
         EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
-
-        if(deserializer.getObject().isPresent()) {
-            return (Session) deserializer.getObject().get();
-        } else {
-            logger.warn(">>> API version mismatch. Using deserializeUnsafe().");
-            try {
-                return (Session) deserializer.deserializeUnsafe();
-            } catch (EventDataObjectDeserializationException e) {
-                logger.error("Failed to deserialize session unsafe: {}", e.getMessage());
-                return null;
-            }
-        }
+        return deserializer.getObject()
+                .map(obj -> (Session) obj)
+                .orElseGet(() -> {
+                    logger.warn("API version mismatch. Using deserializeUnsafe()");
+                    try {
+                        return (Session) deserializer.deserializeUnsafe();
+                    } catch (EventDataObjectDeserializationException e) {
+                        logger.error("Failed to deserialize session: {}", e.getMessage());
+                        return null;
+                    }
+                });
     }
 
     private Long getOrderIdFromMetadata(Session session) {
+        if (session == null || session.getMetadata() == null) {
+            logger.error("Session or metadata is null");
+        }
         String orderIdStr = session.getMetadata().get("order_id");
         if (orderIdStr == null) {
             logger.error("Order Id not found in session metadata");
             return null;
         }
-        return Long.parseLong(orderIdStr);
+        try {
+            return Long.parseLong(orderIdStr);
+        } catch (NumberFormatException e) {
+            logger.error("Invalid order_id format: {}", orderIdStr, e);
+            return null;
+        }
     }
 
 }

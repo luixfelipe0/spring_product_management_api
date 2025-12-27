@@ -4,7 +4,6 @@ import com.luix.ecommerce.dto.order.OrderRequestDTO;
 import com.luix.ecommerce.dto.order.OrderResponseDTO;
 import com.luix.ecommerce.entity.Order;
 import com.luix.ecommerce.entity.OrderItem;
-import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.entity.User;
 import com.luix.ecommerce.entity.enums.OrderStatus;
 import com.luix.ecommerce.exception.RequestValidationException;
@@ -81,7 +80,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponseDTO updateStatus(Long id, String newStatus) {
+    public OrderResponseDTO updateStatus(Long id, OrderStatus newStatus) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
@@ -89,7 +88,7 @@ public class OrderService {
         OrderStatus target;
 
         try {
-            target = OrderStatus.valueOf(newStatus);
+            target = newStatus;
         } catch (IllegalArgumentException e) {
             throw new RequestValidationException("Invalid order status: " + newStatus);
         }
@@ -114,7 +113,7 @@ public class OrderService {
                 .orElseThrow(() -> new ResourceNotFoundException(orderId));
 
         if (order.getOrderStatus() != OrderStatus.CANCELED && order.getOrderStatus() != OrderStatus.PAID) {
-            updateStatus(order.getId(), "CANCELED");
+            updateStatus(order.getId(), OrderStatus.CANCELED);
 
             order.getItems().forEach(orderItem -> {
                         stockService.releaseStock(orderItem.getProduct(), orderItem.getQuantity());
