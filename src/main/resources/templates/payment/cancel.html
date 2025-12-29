@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment canceled</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div class="container py-5 text-center">
+    <div class="card shadow p-4 border-warning">
+        <h1 class="text-warning">⚠️ Payment not accomplished</h1>
+        <p class="lead mt-3">
+            You've canceled the payment process. <br>
+            Don't worry, <strong>no fee was charged</strong> from your card.
+        </p>
+        <p class="text-muted">Your items may be available.</p>
+
+        <div class="mt-4 gap-2 d-flex justify-content-center">
+            <a href="/products" class="btn btn-primary">Keep buying</a>
+            <a href="/cart" class="btn btn-outline-secondary">Back to cart</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

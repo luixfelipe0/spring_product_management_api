@@ -16,4 +16,8 @@ public class PaymentViewController {
         return "payment/success";
     }
 
+    @GetMapping("/cancel")
+    public String showCancelPage() {
+        return "payment/cancel";
+    }
 }
