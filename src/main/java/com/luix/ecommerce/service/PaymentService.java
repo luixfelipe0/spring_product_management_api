@@ -31,14 +31,15 @@ public class PaymentService {
                 .orElseThrow(() -> new ResourceNotFoundException(orderId));
 
         String userEmail = order.getClient().getEmail();
-        String successUrl = "http://localhost:8080/payment/success?orderId=" + order.getId();
+        String successUrl = domainUrl + "/payment/success?orderId=" + order.getId();
+        String cancelUrl = domainUrl + "/payment/cancel";
 
         try {
             SessionCreateParams params = SessionCreateParams.builder()
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setMode(SessionCreateParams.Mode.PAYMENT)
                     .setSuccessUrl(successUrl)
-                    .setCancelUrl(domainUrl + "/cancel.html")
+                    .setCancelUrl(cancelUrl)
                     .addLineItem(SessionCreateParams.LineItem.builder()
                             .setQuantity(1L)
                             .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
