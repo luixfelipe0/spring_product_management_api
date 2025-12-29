@@ -115,9 +115,8 @@ public class OrderService {
         if (order.getOrderStatus() != OrderStatus.CANCELED && order.getOrderStatus() != OrderStatus.PAID) {
             updateStatus(order.getId(), OrderStatus.CANCELED);
 
-            order.getItems().forEach(orderItem -> {
-                        stockService.releaseStock(orderItem.getProduct(), orderItem.getQuantity());
-                    });
+            order.getItems().forEach(orderItem ->
+                    stockService.releaseStock(orderItem.getProduct(), orderItem.getQuantity()));
             logger.info("Order {} has been canceled and stock released.", orderId);
         } else {
             logger.warn("Attempt to cancel order {} failed. Current status: {}", orderId, order.getOrderStatus());
