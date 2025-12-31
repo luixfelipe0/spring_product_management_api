@@ -1,6 +1,7 @@
 package com.luix.ecommerce.controller;
 
 import com.luix.ecommerce.entity.enums.OrderStatus;
+import com.luix.ecommerce.service.EmailService;
 import com.luix.ecommerce.service.OrderService;
 import com.stripe.exception.EventDataObjectDeserializationException;
 import com.stripe.exception.SignatureVerificationException;
@@ -24,9 +25,11 @@ public class StripeWebhookController {
     private String endpointSecret;
 
     private final OrderService orderService;
+    private final EmailService emailService;
 
-    public StripeWebhookController(OrderService orderService) {
+    public StripeWebhookController(OrderService orderService, EmailService emailService) {
         this.orderService = orderService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/stripe")
@@ -58,10 +61,18 @@ public class StripeWebhookController {
         Session session = getSessionFromEvent(event);
         if (session != null) {
             Long orderId = getOrderIdFromMetadata(session);
+            String costumerEmail = session.getCustomerDetails() != null ? session.getCustomerDetails().getEmail() : null;
             if (orderId != null) {
                 try {
                     orderService.updateStatus(orderId, OrderStatus.PAID);
                     logger.info("Order {} successfully marked as PAID!", orderId);
+
+                    if (costumerEmail != null) {
+                        logger.info("Sending confirmation email to {}", costumerEmail);
+                        emailService.sendOrderConfirmation(costumerEmail, orderId);
+                    } else {
+                        logger.warn("Costumer email not found in session, skipping notification.");
+                    }
                 } catch (Exception e) {
                     logger.error("Error updating order status for id: {}", orderId, e);
                 }

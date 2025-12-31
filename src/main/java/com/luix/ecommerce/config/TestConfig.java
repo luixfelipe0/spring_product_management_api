@@ -87,7 +87,7 @@ public class TestConfig implements CommandLineRunner {
         //TO-DO: Seed orders
 
         Order o1 = new Order();
-        o1.setClient(user);
+        o1.setClient(admin);
         o1.setOrderStatus(OrderStatus.WAITING_PAYMENT);
         Order o2 = new Order();
         o2.setClient(user);
