@@ -9,6 +9,8 @@ import com.luix.ecommerce.exception.ResourceNotFoundException;
 import com.luix.ecommerce.mapper.ProductMapper;
 import com.luix.ecommerce.repository.CategoryRepository;
 import com.luix.ecommerce.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,11 +57,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDTO> findAllProducts() {
-        return productRepository.findAllByActiveTrue()
-                .stream()
-                .map(mapper::toDto)
-                .toList();
+    public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
+        return productRepository.findAllByActiveTrue(pageable)
+                .map(mapper::toDto);
     }
 
     @Transactional
