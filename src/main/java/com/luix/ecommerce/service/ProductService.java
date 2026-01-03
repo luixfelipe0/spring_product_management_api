@@ -23,7 +23,9 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductMapper mapper;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper mapper) {
+    public ProductService(ProductRepository productRepository,
+                          CategoryRepository categoryRepository,
+                          ProductMapper mapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.mapper = mapper;
@@ -31,8 +33,16 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO dto) {
+        Product product = mapper.toEntity(dto);
+        Set<Category> categories = dto.categoriesIds()
+                .stream()
+                .map(id -> categoryRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException(id)))
+                .collect(Collectors.toSet());
+        product.getCategories().addAll(categories);
+
         return mapper.toDto(
-                productRepository.save(mapper.toEntity(dto))
+                productRepository.save(product)
         );
     }
 
