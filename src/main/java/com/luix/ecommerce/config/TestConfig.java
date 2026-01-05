@@ -82,18 +82,52 @@ public class TestConfig implements CommandLineRunner {
         p2.getCategories().addAll(Set.of(c1,c3));
         p2.setStockQuantity(30);
 
-        productRepository.saveAll(List.of(p1,p2));
+        Product p3 = new Product();
+        p3.setName("Teclado Mecânico");
+        p3.setPrice(BigDecimal.valueOf(349.90));
+        p3.getCategories().addAll(Set.of(c1, c2));
+        p3.setStockQuantity(20);
+
+        Product p4 = new Product();
+        p4.setName("Câmera Digital");
+        p4.setPrice(BigDecimal.valueOf(899.00));
+        p4.getCategories().addAll(Set.of(c1));
+        p4.setStockQuantity(15);
+
+        Product p5 = new Product();
+        p5.setName("Carregador Portátil");
+        p5.setPrice(BigDecimal.valueOf(149.50));
+        p5.getCategories().addAll(Set.of(c3));
+        p5.setStockQuantity(40);
+
+        Product p6 = new Product();
+        p6.setName("Monitor 27'' 144Hz");
+        p6.setPrice(BigDecimal.valueOf(1299.99));
+        p6.getCategories().addAll(Set.of(c1, c2));
+        p6.setStockQuantity(10);
+
+
+        productRepository.saveAll(List.of(p1, p2, p3, p4, p5, p6));
 
         //TO-DO: Seed orders
 
         Order o1 = new Order();
         o1.setClient(admin);
         o1.setOrderStatus(OrderStatus.WAITING_PAYMENT);
+
         Order o2 = new Order();
         o2.setClient(user);
         o2.setOrderStatus(OrderStatus.WAITING_PAYMENT);
 
-        orderRepository.saveAll(Arrays.asList(o1,o2));
+        Order o3 = new Order();
+        o3.setClient(user);
+        o3.setOrderStatus(OrderStatus.PAID);
+
+        Order o4 = new Order();
+        o4.setClient(admin);
+        o4.setOrderStatus(OrderStatus.SHIPPED);
+
+        orderRepository.saveAll(Arrays.asList(o1,o2,o3,o4));
 
         OrderItem oi1 = new OrderItem();
         oi1.setQuantity(1);
@@ -107,12 +141,37 @@ public class TestConfig implements CommandLineRunner {
         oi2.setOrder(o2);
         oi2.setPrice(p2.getPrice());
 
+        OrderItem oi3 = new OrderItem();
+        oi3.setQuantity(1);
+        oi3.setProduct(p3);
+        oi3.setOrder(o3);
+        oi3.setPrice(p3.getPrice());
 
-        orderItemRepository.saveAll(Arrays.asList(oi1,oi2));
+        OrderItem oi4 = new OrderItem();
+        oi4.setQuantity(2);
+        oi4.setProduct(p4);
+        oi4.setOrder(o3);
+        oi4.setPrice(p4.getPrice());
+
+        OrderItem oi5 = new OrderItem();
+        oi5.setQuantity(1);
+        oi5.setProduct(p5);
+        oi5.setOrder(o4);
+        oi5.setPrice(p5.getPrice());
+
+        OrderItem oi6 = new OrderItem();
+        oi6.setQuantity(1);
+        oi6.setProduct(p6);
+        oi6.setOrder(o4);
+        oi6.setPrice(p6.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(oi1,oi2,oi3,oi4,oi5,oi6));
 
         o1.getItems().add(oi1);
         o2.getItems().add(oi2);
+        o3.getItems().addAll(Arrays.asList(oi3,oi4));
+        o4.getItems().addAll(Arrays.asList(oi5,oi6));
 
-        orderRepository.saveAll(Arrays.asList(o1,o2));
+        orderRepository.saveAll(Arrays.asList(o1,o2,o3,o4));
     }
 }
