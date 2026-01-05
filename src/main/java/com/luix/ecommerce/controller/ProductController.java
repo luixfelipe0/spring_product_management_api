@@ -4,6 +4,7 @@ import com.luix.ecommerce.dto.product.ProductRequestDTO;
 import com.luix.ecommerce.dto.product.ProductResponseDTO;
 import com.luix.ecommerce.dto.product.ProductUpdateDTO;
 import com.luix.ecommerce.service.ProductService;
+import com.luix.ecommerce.util.PageableUtil;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,11 +38,7 @@ public class ProductController {
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending()
-        );
+        Pageable pageable = PageableUtil.createPageable(page,size,sortBy,direction);
         return ResponseEntity.ok(service.findAllProducts(pageable));
     }
 
