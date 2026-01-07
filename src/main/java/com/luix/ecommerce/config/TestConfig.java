@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -91,13 +90,13 @@ public class TestConfig implements CommandLineRunner {
         Product p4 = new Product();
         p4.setName("Câmera Digital");
         p4.setPrice(BigDecimal.valueOf(899.00));
-        p4.getCategories().addAll(Set.of(c1));
+        p4.getCategories().add(c1);
         p4.setStockQuantity(15);
 
         Product p5 = new Product();
         p5.setName("Carregador Portátil");
         p5.setPrice(BigDecimal.valueOf(149.50));
-        p5.getCategories().addAll(Set.of(c3));
+        p5.getCategories().add(c3);
         p5.setStockQuantity(40);
 
         Product p6 = new Product();
