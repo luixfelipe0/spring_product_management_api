@@ -2,6 +2,7 @@ package com.luix.spring_product_management_api.service;
 
 import com.luix.ecommerce.dto.product.ProductRequestDTO;
 import com.luix.ecommerce.dto.product.ProductResponseDTO;
+import com.luix.ecommerce.dto.product.ProductUpdateDTO;
 import com.luix.ecommerce.entity.Category;
 import com.luix.ecommerce.entity.Product;
 import com.luix.ecommerce.exception.ResourceNotFoundException;
@@ -115,6 +116,71 @@ public class ProductServiceTest {
 
         verify(productMapper).toEntity(dto);
         verify(categoryRepository).findById(99L);
+        verify(productRepository, never()).save(any(Product.class));
+    }
+
+    @Test
+    void testUpdateProductSuccess() {
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("Mouse Gamer");
+        product.setDescription("Older mouse");
+        product.setPrice(BigDecimal.valueOf(129.90));
+        product.setActive(true);
+
+        ProductUpdateDTO updateDTO = new ProductUpdateDTO(
+                "Mouse Gamer Pro",
+                "Updated mouse with more precision",
+                BigDecimal.valueOf(199.90),
+                "img-new.png",
+                Set.of()
+        );
+
+        when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+        when(productMapper.toDto(product)).thenReturn(
+                new ProductResponseDTO(
+                        1L,
+                        "Mouse Gamer Pro",
+                        "Mouse atualizado com mais precisão",
+                        BigDecimal.valueOf(199.90),
+                        "img-new.png",
+                        true,
+                        null,
+                        null,
+                        Set.of()
+                )
+        );
+
+        ProductResponseDTO response = productService.updateProduct(1L, updateDTO);
+
+        assertNotNull(response);
+        assertEquals("Mouse Gamer Pro", response.name());
+        assertEquals(BigDecimal.valueOf(199.90), response.price());
+        assertEquals("img-new.png", response.imgUrl());
+
+        verify(productRepository).findById(1L);
+        verify(productRepository).save(product);
+        verify(productMapper).toDto(product);
+
+    }
+
+    @Test
+    void testUpdateProductNotFound() {
+        ProductUpdateDTO updateDto = new ProductUpdateDTO(
+                "Mouse Gamer Pro",
+                "Mouse atualizado",
+                BigDecimal.valueOf(199.99),
+                "img-new.png",
+                Set.of()
+        );
+
+        when(productRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> productService.updateProduct(99L, updateDto));
+
+        verify(productRepository).findById(99L);
         verify(productRepository, never()).save(any(Product.class));
     }
 
