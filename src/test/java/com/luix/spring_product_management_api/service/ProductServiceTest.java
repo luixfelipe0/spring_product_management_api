@@ -228,4 +228,33 @@ public class ProductServiceTest {
         verify(productMapper, never()).toDto(any(Product.class));
     }
 
+    @Test
+    void testDeactivateProductSuccess() {
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("Mouse Gamer");
+        product.setDescription("High tech mouse");
+        product.setPrice(BigDecimal.valueOf(129.90));
+        product.setActive(true);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        productService.deactivateProduct(1L);
+
+        assertFalse(product.getActive());
+
+        verify(productRepository).findById(1L);
+        verify(productRepository).save(product);
+    }
+
+    @Test
+    void testDeactivateProduct() {
+        when(productRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> productService.deactivateProduct(99L));
+
+        verify(productRepository).findById(99L);
+        verify(productRepository, never()).save(any(Product.class));
+    }
 }
