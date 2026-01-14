@@ -184,4 +184,48 @@ public class ProductServiceTest {
         verify(productRepository, never()).save(any(Product.class));
     }
 
+    @Test
+    void testFindProductByIdSuccess() {
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("Mouse Gamer");
+        product.setDescription("High tech mouse");
+        product.setPrice(BigDecimal.valueOf(129.90));
+        product.setActive(true);
+
+        ProductResponseDTO responseDTO = new ProductResponseDTO(
+                1L,
+                "Mouse Gamer",
+                "High tech mouse",
+                BigDecimal.valueOf(129.90),
+                null,
+                true,
+                Instant.now(),
+                Instant.now(),
+                Set.of()
+        );
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productMapper.toDto(product)).thenReturn(responseDTO);
+
+        ProductResponseDTO response = productService.findProductById(1L);
+
+        assertNotNull(response);
+        assertEquals(responseDTO.name(), response.name());
+        assertEquals(responseDTO.price(), response.price());
+
+        verify(productRepository).findById(1L);
+        verify(productMapper).toDto(product);
+    }
+
+    @Test
+    void testFindProductByIdNotFound() {
+        when(productRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, ()-> productService.findProductById(99L));
+
+        verify(productRepository).findById(99L);
+        verify(productMapper, never()).toDto(any(Product.class));
+    }
+
 }
