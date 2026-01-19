@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -23,9 +24,10 @@ public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private String description;
-    private Boolean active = true;
+    private boolean active = true;
 
     @CreationTimestamp
     private Instant createdAt;
@@ -63,9 +65,9 @@ public class Category implements Serializable {
         this.name = name;
     }
 
-//    public Set<Product> getProducts() {
-//        return products;
-//    }
+    public Set<Product> getProducts() {
+        return products;
+    }
 
     public String getDescription() {
         return description;
@@ -121,11 +123,11 @@ public class Category implements Serializable {
     }
 
     public void updateInfo(CategoryUpdateDTO dto) {
-        if(dto.name() != null) {
-            this.name = dto.name();
-        }
-        if(dto.description() != null) {
-            this.description = dto.description();
-        }
+        Optional.ofNullable(dto.name())
+                .filter(name -> !name.isBlank())
+                .ifPresent(this::setName);
+        Optional.ofNullable(dto.description())
+                .filter(description -> !description.isBlank())
+                .ifPresent(this::setDescription);
     }
 }
