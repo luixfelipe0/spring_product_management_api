@@ -52,7 +52,6 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException(id));
         category.updateInfo(dto);
 
-        repository.save(category);
         return mapper.toDto(category);
     }
 
@@ -62,7 +61,6 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
         category.setActive(false);
-        repository.save(category);
     }
 
 }
